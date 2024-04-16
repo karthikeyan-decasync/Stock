@@ -1,0 +1,102 @@
+<div class="container-fluid m-0 p-0" style="overflow-y: auto; scrollbar-width: none;">
+    <div class="row" >
+
+        <div style="width: 15%;" class="col-2">
+            <!-- input field -->
+            <div class=" side-nav">
+                <div class="icons">
+                    <button *ngIf="isFullScreen" (click)="fullscreen()" type="submit" class="fullscreen-icon">
+                        <i class="fa-solid fa-expand"></i>
+                        <br>
+                        <label >Full screen</label>
+                    </button>
+
+                    <button *ngIf="!isFullScreen" type="submit" (click)="exitfullscreen()"  class="fullscreen-icon">
+                        <i class="fa-solid fa-compress"></i>
+                        <br>
+                        <label>Small screen</label>
+                    </button>
+                </div>
+
+
+                <input type="text" class="form-controll input-search p-2" placeholder="search">
+                <div class="links">
+                    <ul>
+                        <li (click)="showurliframe()">
+                            <a >Adhaar Enrollment</a>
+                        </li>
+                        <li>
+                            <a >Ration Card Services</a>
+                        </li>
+                        <li>
+                            <a href="">Ticket Booking</a>
+                        </li>
+                        <li>
+                            <a href="">Pancard Services</a>
+                        </li>
+                        <li>
+                            <a href="">Pancard Services</a>
+                        </li>
+                        <li>
+                            <a href="">Pancard Services</a>
+                        </li>
+                        <li>
+                            <a href="">Pancard Services</a>
+                        </li>
+                        <li>
+                            <a href="">Pancard Services</a>
+                        </li>
+                        <li>
+                            <a href="">Pancard Services</a>
+                        </li>
+                        <li>
+                            <a href="">Pancard Services</a>
+                        </li>
+                        <li>
+                            <a href="">Pancard Services</a>
+                        </li>
+                        <li>
+                            <a href="">Pancard Services</a>
+                        </li>
+                        <li>
+                            <a href="">Pancard Services</a>
+                        </li>
+                        <li>
+                            <a href="">Pancard Services</a>
+                        </li>
+                        <li>
+                            <a href="">Pancard Services</a>
+                        </li>
+                        <li>
+                            <a href="">Pancard Services</a>
+                        </li>
+                        <li>
+                            <a href="">Pancard Services</a>
+                        </li>
+                        <li>
+                            <a href="">Pancard Services</a>
+                        </li>
+                        <li>
+                            <a href="">Pancard Services</a>
+                        </li>
+                        <li>
+                            <a href="">Pancard Services</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+    
+        </div>
+
+        <div style="width: 85%; height: 100vh; scrollbar-width: none;  margin: 0; padding: 0;" class="col-10">
+             <iframe [src]="showweb" frameborder="0" width="100%" height="100%" ></iframe>
+        </div>
+
+    </div>
+</div>
+
+<!-- 
+
+
+ -->

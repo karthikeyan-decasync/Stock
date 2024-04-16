@@ -1,0 +1,13 @@
+https://www.youtube.com/watch?v=NxBqdDSYFn4
+
+https://stackblitz.com/edit/angular-date-pipe-example?file=src%2Fapp%2Fapp.component.html  time
+https://stackblitz.com/edit/angular-date-pipe-examples?file=src%2Fapp%2Fapp.component.html
+
+
+https://stackblitz.com/edit/angular-date-calculator?file=src%2Fapp%2Fapp.component.ts
+
+
+to do
+
+1. Inform them to add admission fee Head and add addmission fee.
+2 .add new interface for book return

@@ -1,0 +1,100 @@
+<header class="navbar navbar-expand-md navbar-dark fixed-top nga-navbar">
+    <nav class="container" aria-label="Main navigation">
+      <a routerLink="/" class="navbar-brand" alt="Accueil" aria-label="Ganatan">
+        <img src="https://seeklogo.com/images/A/akshaya-logo-95BB241499-seeklogo.com.png" width="25" height="25"
+          alt="Logo Ganatan">
+        <span class="nga-logo mx-1"> Akshaya </span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+        aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <!-- -->
+        <ul *ngIf="!this.api.logged_in" class="navbar-nav mx-auto">
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" routerLink="/home">
+              <i class="fas fa-home me-1"></i>Home</a>
+          </li>
+        </ul>
+        <!-- *ngIf="this.api.logged_in" -->
+        <ul class="navbar-nav me-auto">
+          <!-- Dash -- *ngxPermissionsOnly="['Admin','Staff','Member']" -->
+          <!-- <li class="nav-item">
+            <a class="nav-link active" aria-current="page" routerLink="/dash">
+              <i class="fas fa-home me-1"></i> Dash </a>
+          </li> -->
+          <!-- new book -*ngxPermissionsOnly="['Admin','Staff']" -->
+          <!-- <li class="nav-item">
+            <a class="nav-link active" aria-current="page" routerLink="/new-book">
+              <i class="fa-solid fa-clipboard-user"> &nbsp;</i>Attendance</a>
+          </li> -->
+          <!-- new user *ngxPermissionsOnly="['Admin','Staff']" -->
+          <!-- <li class="nav-item">
+            <a class="nav-link active" aria-current="page" routerLink="/signup">
+              <i class="fa-solid fa-person-walking-arrow-right"></i>Leave Requst</a>
+          </li> -->
+          <!-- Transaction -- *ngxPermissionsOnly="['Admin','Staff']" -->
+          <!-- <li class="nav-item">
+            <a class="nav-link active" aria-current="page" routerLink="/transactions">
+              <i class="fa-solid fa-sack-dollar"></i>Income</a>
+          </li> -->
+          <!-- book return - *ngxPermissionsOnly="['Admin','Staff']" -->
+          <!-- <li class="nav-item">
+            <a class="nav-link active" aria-current="page" routerLink="/book-return">
+              <i class="fa-solid fa-indian-rupee-sign"></i>Expense</a>
+          </li> -->
+          <!-- <li class="nav-item">
+            <a class="nav-link active" aria-current="page" routerLink="/nav-links">
+              <i class="fa-solid fa-link"></i>Quick Links</a>
+          </li> -->
+          <!-- Admin section -->
+          <!-- <li class="nav-item ">
+            <a class="nav-link active" aria-current="page" routerLink="/book-return">
+              <i class="fa-solid fa-people-roof"></i>Manage</a>
+          </li> -->
+          <!-- --------------------------------------------------------------- -->
+  
+          <!-- <li class="nav-item">
+            <a class="nav-link active" aria-current="page" routerLink="/book-return">
+              <i class="fa-solid fa-house-signal"></i>Agency</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" routerLink="/book-return">
+              <i class="fa-solid fa-blog"></i>Blog</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" routerLink="/book-return">
+              <i class="fa-solid fa-newspaper"></i>News</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" routerLink="/book-return">
+              <i class="fa-solid fa-thumbs-up"></i>Approves</a>
+          </li> -->
+  
+          <!-- reports - *ngxPermissionsOnly="['Admin','Staff']" -->
+          <!-- <li class="nav-item">
+            <a class="nav-link active" aria-current="page" routerLink="/reports">
+              <i class="fa fa-file me-1"></i> Reports </a>
+          </li> -->
+  
+        </ul>
+  
+  
+        <form class="d-flex">
+          <!-- <button *ngxPermissionsOnly="['Admin']" type="button" class="btn btn-sm btn-primary me-2" routerLink="/signup"><i
+              class="fas fa-user-plus me-2"></i>Add User</button> -->
+  
+  
+          <button *ngIf="!this.api.logged_in" type="button" class="btn btn-sm btn-outline-light me-2"
+            routerLink="/login">Login</button>
+  
+          <button *ngIf="this.api.logged_in" type="button" class="btn btn-sm btn-outline-light me-2" ><i
+              class="fa fa-sign-out me-2"></i>Logout</button>
+  
+  
+        </form>
+      </div>
+    </nav>
+  </header>
+  

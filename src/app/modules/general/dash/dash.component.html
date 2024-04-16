@@ -1,0 +1,353 @@
+<div class="container py-5">
+  <!-- <div class="row">
+    <div class="col-12 col-sm-12 col-md-12 col-lg-3 col-xl-3 text-center mb-2">
+      <h1 class="h5">
+        <i class="fas fa-laptop fa-lg me-2 text-primary"></i>
+        {{ name }}
+        <i class="fas fa-mobile-alt fa-lg ms-2 text-primary"></i>
+      </h1>
+    </div>
+    <div class="col-12 col-sm-12 col-md-12 col-lg-4 col-xl-3 text-center text-danger mb-2">
+      <h2 class="h5">
+        {{ version }}<i class="fab fa-angular fa-lg ms-2"></i>
+      </h2>
+    </div>
+    <div class="col-12 col-sm-12 col-md-12 col-lg-4 col-xl-3 text-center text-primary mb-2">
+      <h2 class="h5">
+        {{ bootstrap }}<i class="fab fa-bootstrap fa-lg ms-2"></i>
+      </h2>
+    </div>
+    <div class="col-12 col-sm-12 col-md-12 col-lg-4 col-xl-3 text-center text-success mb-2">
+      <h2 class="h5">
+        {{ fontawesome }}<i class="fab fa-font-awesome-flag fa-lg ms-2"></i>
+      </h2>
+    </div>
+  </div> -->
+
+  <div class="row mb-1">
+    <div class="col-md-12 text-center">
+      <h2 class="h5"> Lib Ver.1.5.6 <i class="fas fa-list ms-1"></i></h2>
+    </div>
+  </div>
+  <hr>
+ 
+
+
+  <!--  *ngxPermissionsOnly="['Admin','Staff','Member']"  -->
+  <div class="row pt-2">
+    <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-2">
+      <div class="card nga-card bg-light mb-3">
+      
+          <div class="card-header">
+            <div class="row">
+              <div class="col-10 col-xl-10">
+                <h2 class="card-title h2">Holding list</h2>
+
+                <h2 style="color: navy;"> {{book_list_count}}  </h2>
+            
+              </div>
+              <div class="col-2 col-xl-2">
+                <i class="fab fa-bootstrap text-primary" style="font-size: 20px;"></i>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <p class="card-text"> List Of Unique books</p>
+          </div>
+
+          <div class="card-footer d-flex ">
+            <small *ngxPermissionsOnly="['Admin','Staff']"  class="text-muted">
+              <a  matTooltip="Add New book"
+                matTooltipClass="example-tooltip-red1"   data-target="#addModal"  style="float: right;cursor: pointer;"   data-toggle="modal"    >
+                <i class="fa fa-plus-circle"></i>  Add   </a>
+            </small>
+            &nbsp; &nbsp;
+  
+            <!-- <small class="text-muted">
+              <a  matTooltip="View books"
+                matTooltipClass="example-tooltip-red1"   data-target="#addModal"  style="float: right;cursor: pointer;"   data-toggle="modal"   (click)="view_book()" >
+                <i class="fa fa-eye"></i>  View   </a> 
+            </small>  -->
+            <!-- <input type="file" accept=".csv"(change)="handleFileSelect($event)"> -->
+
+            <input type="file" #csvReader name="Upload CSV" id="txtFileUpload" (change)="uploadListener($event)" accept=".csv" />
+
+            <a href="javascript:;" *ngIf="records.length > 0" (click)="getJsonData()" class="btn btn-primary">Convert Json </a>
+
+<a href="javascript:;" *ngIf="records.length > 0" (click)="fileReset()" class="btn btn-primary">Reset </a>  
+
+           </div>
+      </div>
+    </div>
+
+    <div *ngxPermissionsOnly="['Admin','Staff']"  class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-2">
+      <div class="card nga-card bg-light mb-3">
+      
+          <div class="card-header">
+            <div class="row">
+              <div class="col-10 col-xl-10">
+                <h2 class="card-title h2">Book Store</h2>
+
+                <h2 style="color: navy;"> {{book_store_count}}  </h2>
+            
+              </div>
+              <div class="col-2 col-xl-2">
+                <i class="fa fa-book text-primary" style="font-size: 20px;"></i>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <p class="card-text"> List Of Distinguishable books</p>
+          </div>
+
+          <div class="card-footer d-flex ">
+            <small class="text-muted">
+              <a  matTooltip="Add book to store"
+                matTooltipClass="example-tooltip-red1"   data-target="#addModal"  style="float: right;cursor: pointer;"   data-toggle="modal"    >
+                <i class="fa fa-plus-circle"></i>  Add   </a>
+            </small>
+            &nbsp; &nbsp;
+  
+            <small class="text-muted">
+              <a  matTooltip="View book store"
+                matTooltipClass="example-tooltip-red1"   data-target="#addModal"  style="float: right;cursor: pointer;"   data-toggle="modal"  >
+                <i class="fa fa-eye"></i>  View   </a> 
+            </small> 
+           </div>
+      </div>
+    </div>
+
+
+    <div *ngxPermissionsOnly="['Admin','Staff']"  class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-2">
+      <div class="card nga-card bg-light mb-3">
+      
+          <div class="card-header">
+            <div class="row">
+              <div class="col-10 col-xl-10">
+                <h2 class="card-title h2"> Members </h2>
+
+                <h2 style="color: navy;"> {{user_count}}  </h2>
+            
+              </div>
+              <div class="col-2 col-xl-2">
+                <i class="fa fa-users text-primary" style="font-size: 20px;"></i>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <p class="card-text"> List Of Registerd Members </p>
+          </div>
+
+          <div class="card-footer d-flex ">
+            <small class="text-muted">
+              <a  matTooltip="Add New customer"
+                matTooltipClass="example-tooltip-red1"   data-target="#addModal"  style="float: right;cursor: pointer;"   data-toggle="modal"    >
+                <i class="fa fa-plus-circle"></i>  Add   </a>
+            </small>
+            &nbsp; &nbsp;
+  
+            <small class="text-muted">
+              <a  matTooltip="Add New customer"
+                matTooltipClass="example-tooltip-red1"   data-target="#addModal"  style="float: right;cursor: pointer;"   data-toggle="modal"   >
+                <i class="fa fa-eye"></i>  View   </a> 
+            </small> 
+           </div>
+      </div>
+    </div>
+
+
+
+    <div *ngxPermissionsOnly="['Admin','Staff']"  class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-2">
+      <div class="card nga-card bg-light mb-3">
+      
+          <div class="card-header">
+            <div class="row">
+              <div class="col-10 col-xl-10">
+                <h2 class="card-title h2"> Book Supply </h2>
+
+                <h2 style="color: navy;"> {{book_distri_count}}  </h2>
+            
+              </div>
+              <div class="col-2 col-xl-2">
+                <i class="fas fa-handshake text-primary" style="font-size: 20px;"></i>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <p class="card-text"> List Of Book Supply </p>
+          </div>
+
+          <div class="card-footer d-flex ">
+            <small class="text-muted">
+              <a  matTooltip="Add New book hire"
+                matTooltipClass="example-tooltip-red1"   data-target="#addModal"  style="float: right;cursor: pointer;"   data-toggle="modal"    >
+                <i class="fa fa-plus-circle"></i>  Add   </a>
+            </small>
+            &nbsp; &nbsp;
+  
+            <small class="text-muted">
+              <a  matTooltip="view hire list"
+                matTooltipClass="example-tooltip-red1"   data-target="#addModal"  style="float: right;cursor: pointer;"   data-toggle="modal"    >
+                <i class="fa fa-eye"></i>  View   </a> 
+            </small> 
+           </div>
+      </div>
+    </div>
+
+
+    <div *ngxPermissionsOnly="['Admin','Staff','Member']"  class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-2">
+      <div class="card nga-card bg-light mb-3">
+      
+          <div class="card-header">
+            <div class="row">
+              <div class="col-10 col-xl-10">
+                <h2 class="card-title h2"> My Hiring </h2>
+
+                <h2 style="color: navy;"> {{ hiring_count }}  </h2>
+            
+              </div>
+              <div class="col-2 col-xl-2">
+                <i class="fas fa-handshake text-primary" style="font-size: 20px;"></i>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <p class="card-text"> List Of Book Hirings </p>
+          </div>
+
+          <div class="card-footer d-flex ">
+            <small class="text-muted">
+              <a  matTooltip="View Active Book hires"
+                matTooltipClass="example-tooltip-red1"   data-target="#addModal"  style="float: right;cursor: pointer;"   data-toggle="modal"    >
+                <i class="fa-sharp fa-solid fa-briefcase"></i>  Holdings <span class="badge"> {{hiring_count_active}} </span>    </a>  
+            </small>
+            &nbsp; &nbsp;
+  
+            <small class="text-muted">
+              <a  matTooltip="view hire list"
+                matTooltipClass="example-tooltip-red1"   data-target="#addModal"  style="float: right;cursor: pointer;"   data-toggle="modal"   >
+                <i class="fa fa-eye"></i>  History  <span class="badge"> {{hiring_count - hiring_count_active}} </span> </a> 
+            </small> 
+           </div>
+      </div>
+    </div>
+
+
+    <div *ngxPermissionsOnly="['Admin','Staff','Member']"  class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-2">
+      <div class="card nga-card bg-light mb-3">
+      
+          <div class="card-header">
+            <div class="row">
+              <div class="col-10 col-xl-10">
+                <h2 class="card-title h2"> My Transactions </h2>
+
+                <h2 style="color: navy;"> {{my_trans_count}}  </h2>
+            
+              </div>
+              <div class="col-2 col-xl-2">
+                <i class="fas fa-handshake text-primary" style="font-size: 20px;"></i>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <p class="card-text"> List Of Payments </p>
+          </div>
+
+          <div class="card-footer d-flex ">
+        
+            &nbsp; &nbsp;
+  
+            <small class="text-muted">
+              <a  matTooltip="view hire list"
+                matTooltipClass="example-tooltip-red1"   data-target="#addModal"  style="float: right;cursor: pointer;"   data-toggle="modal"  >
+                <i class="fa fa-eye"></i>  View   </a> 
+            </small> 
+           </div>
+      </div>
+    </div>
+
+
+
+
+     <ngx-table  *ngIf="records.length > 0"
+    [configuration]="configuration"
+    [data]="data"
+    [columns]="columns"
+    (event)="onEvent($event)"
+  >
+    <ng-template let-row>
+      <td>
+        <div class="font-small">{{ row.Si }}</div>
+      </td>
+      <td>
+        <span class="font-small">{{ row.Token }}</span>
+      </td>
+      <td>
+        <span class="font-small">{{ row.Pvalue }}</span>
+      </td>
+      <td>
+        <span class="font-small">{{ row.C_id }}</span>
+      </td>
+      <td>
+        <span class="font-small">{{ row.Status }}</span>
+      </td>
+      <td>
+        <span class="font-small">{{ row.Script }}</span>
+      </td>
+      <!-- <td>
+        <button class="btn btn-primary btn-sm" (click)="showModal()">
+          Edit
+        </button>
+      </td> -->
+    </ng-template>
+  </ngx-table> 
+
+  {{jsondatadisplay}}
+  
+  <!-- <div *ngIf="modal" class="modal active">
+    <div class="modal-overlay"></div>
+    <div class="modal-container" role="document">
+      <div class="modal-header">
+        <button
+          href="#modals-sizes"
+          class="btn btn-clear float-right"
+          (click)="hideModal()"
+          aria-label="Close"
+        ></button>
+        <div class="modal-title h5">Modal title</div>
+      </div>
+      <div class="modal-body">
+        <div class="content">
+          <pre>{{ selected }}</pre>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary btn-sm" (click)="hideModal()">Close</button>
+      </div>
+    </div>
+  </div>
+   
+
+  <table class="table"  *ngIf="records.length > 0">
+    <thead class="thead-dark" >
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Min</th>
+        <th scope="col">Max</th>
+        <th scope="col">Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let record of records;let i = index;">
+        <th scope="row">{{record.id}}</th>
+        <td>{{record.min}}</td>
+        <td>{{record.max}}</td>
+        <td>{{record.score}}</td>
+      </tr>
+  
+    </tbody>
+  </table> -->
+
+
+  </div>
+</div>
