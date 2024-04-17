@@ -8,6 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Columns, Config, DefaultConfig } from 'ngx-easy-table';
 
+
 interface Company {
   Si: number;
   Token: number;
@@ -17,6 +18,8 @@ interface Company {
   Script: string;
 }
 
+
+
 export class CsvData {
   public Si: number;
   public Token: number;
@@ -25,6 +28,14 @@ export class CsvData {
   public Status: string;
   public Script: string;
 }
+
+interface second {
+  C_id: number;
+  Token: number;
+  Pvalue: number;
+  Status: string;
+}
+
 @Component({
   selector: 'app-dash',
   templateUrl: './dash.component.html',
@@ -36,9 +47,20 @@ export class DashComponent implements OnInit {
   public records: Company[] = [];
   @ViewChild('csvReader') csvReader: any;
   jsondatadisplay: any;
-
   modal = false;
   selected: any;
+
+  purchase_value = 1000;
+
+  public columns1: Columns[] = [
+    { key: 'Si', title: 'Si'}, 
+    { key: 'Pvalue', title: 'pvalue'},
+    { key: 'Status', title: 'Status'},
+    { key: 'Script', title: 'Script'},
+    { key: 'C_id', title: 'C_id'},
+    { key: 'Time', title: 'Time'},
+    
+  ];
 
   public columns: Columns[] = [
     { key: 'Si', title: 'Si' },
@@ -49,8 +71,11 @@ export class DashComponent implements OnInit {
     { key: 'Script', title: 'Script' },
   ];
 
+  data1: second[] = [];
   data: Company[] = [];
   public configuration: Config;
+
+   monitoringInterval : any;
 
   // name = environment.application.name;
   version = environment.application.version;
@@ -78,10 +103,6 @@ export class DashComponent implements OnInit {
       Script: ''
     };
   }
-
-
-
-
   ngOnInit(): void {
     this.configuration = { ...DefaultConfig };
     this.data = [];
@@ -180,6 +201,7 @@ export class DashComponent implements OnInit {
   fileReset() {
     this.csvReader.nativeElement.value = "";
     this.records = [];
+    this.csvArr_try = [];
     this.jsondatadisplay = '';
   }
   getJsonData() {
@@ -202,9 +224,67 @@ export class DashComponent implements OnInit {
     console.log(file);
   }
 
-  
+
+ 
+
+
+
+
+
+startMonitoring() {
+    let index = 0;
+
+    const iterate = () => {
+        if (index < this.records.length) {
+
+            console.log(this.records[index].Pvalue);
+            const Pvalue = this.records[index].Pvalue;
+            // this.records[index].score = Math.floor(Math.random() * 100);
+           // console.log("Updated index " + index  );
+
+            // Generate a random number between 700 and 900
+            const randomValue = Math.floor(Math.random() * (900 - 700 + 1)) + 700;
+            console.log("Random value:", randomValue);
+            
+            // Calculate the difference percentage
+            const difference = Math.abs(randomValue - Pvalue) / Pvalue * 100;
+
+            // Check if the difference is greater than or less than 10% of Pvalue
+            if (difference > 10) {
+              if (randomValue > Pvalue) {
+                alert("The difference (" + difference.toFixed(2) + "%) exceeds 10% of Pvalue. The random value is higher.");
+            } else {
+                alert("The difference (" + difference.toFixed(2) + "%) exceeds 10% of Pvalue. The random value is lower.");
+            }
+            }
+
+
+
+            index++;
+            this.monitoringInterval =  setTimeout(iterate, 2000);
+        } else {
+            // Reset index to 0 and repeat the iteration
+            console.log("Updated index " + index  );
+            index = 0;
+            this.monitoringInterval = setTimeout(iterate, 2000);
+        }
+    };
+
+    // Start the initial iteration
+    iterate();
+}
+
+stopMonitoring() {
+    clearTimeout(this.monitoringInterval);
+}
+
+
 }
 
 
 //address?: { street: string; number?: number };
+
+
+
+
 
