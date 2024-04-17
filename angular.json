@@ -34,7 +34,8 @@
               "node_modules/sweetalert2/dist/sweetalert2.css",
               "node_modules/ngx-easy-table/style.css",
               "src/assets/params/css/fonts.googleapis.min.css",
-              "src/styles.css"
+              "src/styles.css",
+              "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": [
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"

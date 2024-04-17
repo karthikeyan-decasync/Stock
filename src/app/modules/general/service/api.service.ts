@@ -40,7 +40,7 @@ export interface Share_model {
 export class ApiService {
 
 
-    private bUrl = 'http://127.0.0.1:9011/';
+    private bUrl = 'http://127.0.0.1:3000/';
     private cUrl = 'http://127.0.0.1:9011/api/';
     private publicUrl = 'http://127.0.0.1:9011/public/';
 
@@ -101,11 +101,22 @@ export class ApiService {
  
  
   login(model: any) { 
-    
-   
     let body = JSON.stringify(model);  
     console.log(body)
     return this.http.post(this.publicUrl + 'user_login', body, this.httpOptions1).pipe(catchError(this.handleError<any>('login', body)));
+
+  }
+
+  login_shoonya(model: any) { 
+    let body = JSON.stringify(model);  
+    console.log(body)
+    return this.http.post(this.bUrl + 'login', body, this.httpOptions1).pipe(catchError(this.handleError<any>('login', body)));
+
+  }
+  g_q_shoonya(model: any) { 
+    let body = JSON.stringify(model);  
+    console.log(body)
+    return this.http.post(this.bUrl + 'g_q', body, this.httpOptions1).pipe(catchError(this.handleError<any>('login', body)));
 
   }
 

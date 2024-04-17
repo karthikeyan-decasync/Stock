@@ -1,0 +1,12 @@
+.form-control {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+}
+.card{
+    background: #b7b5b159 !important;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+    padding: 20px;
+    width: 320px;
+}

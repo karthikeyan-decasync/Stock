@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { LoginComponent } from './login.component';
 import { LoginRoutingModule } from './login-routing.module';
 import { ReactiveFormsModule,FormsModule } from '@angular/forms';
+import { Adminlogin } from './adminlogin';
 @NgModule({
   imports: [
     CommonModule,
@@ -13,11 +14,13 @@ import { ReactiveFormsModule,FormsModule } from '@angular/forms';
   ],
   exports: [
     LoginComponent,
+    Adminlogin
     
     
   ],
   declarations: [
-    LoginComponent
+    LoginComponent,
+    Adminlogin
   ],
   providers: [
   ],

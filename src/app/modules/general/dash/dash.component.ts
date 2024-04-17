@@ -8,7 +8,7 @@ import { NgxPermissionsService } from 'ngx-permissions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Columns, Config, DefaultConfig, } from 'ngx-easy-table';
-
+import { ToastrService } from 'ngx-toastr';
 
 interface Company {
   Si: number;
@@ -48,6 +48,8 @@ interface Second {
  
 })
 export class DashComponent implements OnInit {
+
+  
 
   name = 'Angular ' + VERSION.major;
   public records: Company[] = [];
@@ -95,11 +97,11 @@ export class DashComponent implements OnInit {
   hiring_count: number = 0;
   hiring_count_active: number = 0;
   my_trans_count: number = 0;
-
+  randomValue : number = 0;
   csvArr_try: Company[] = [];
   csvRecord: Company = null;
   constructor(private meta: Meta, public dialog: MatDialog, private ps: NgxPermissionsService,
-    private snackBar: MatSnackBar, private rs: Router, public api: ApiService , private cdr:ChangeDetectorRef) {
+    private snackBar: MatSnackBar, private rs: Router, public api: ApiService , private cdr:ChangeDetectorRef , private toastr: ToastrService) {
     this.csvRecord = {
       Si: 0,
       Token: 0,
@@ -119,6 +121,8 @@ export class DashComponent implements OnInit {
         content: 'This application was developed with Angular version 14.2.5 and bootstrap 5.2.2' +
           ' It applies Routing, Lazy loading, Server side rendering and Progressive Web App (PWA)'
       });
+
+      
   }
 
   uploadListener($event: any): void {
@@ -249,18 +253,36 @@ export class DashComponent implements OnInit {
         // console.log("Updated index " + index  );
 
         // Generate a random number between 700 and 900
-        const randomValue = Math.floor(Math.random() * (900 - 700 + 1)) + 700;
-        console.log("Random value:", randomValue);
+        // this.randomValue = Math.floor(Math.random() * (900 - 700 + 1)) + 700;
+
+        const sample = {
+          "exch_name": "NSE",
+          "token": this.records[index].Token.toString(),
+        }
+
+        this.api.g_q_shoonya(sample).subscribe((res: any) => {
+
+          console.log(res);
+
+          this.randomValue = res.lt;
+
+
+        })
+
+
+
+
+
+        console.log("Random value:", this.randomValue);
 
         // Calculate the difference percentage
-        const difference = Math.abs(randomValue - Pvalue) / Pvalue * 100;
+        const difference = Math.abs(this.randomValue - Pvalue) / Pvalue * 100;
 
         // Check if the difference is greater than or less than 10% of Pvalue
 
 
-      if (difference > 10) {
-        if (randomValue > Pvalue) {
-          alert("The difference (" + difference.toFixed(2) + "%) exceeds 10% of Pvalue. The random value is higher.");
+       if (difference > 10) {
+        if (this.randomValue > Pvalue) {
 
           const curruntRecord3 = {
             Si: this.records[index].Si,
@@ -268,16 +290,15 @@ export class DashComponent implements OnInit {
             C_id: this.records[index].C_id,
             Status: this.records[index].Status,
             Script: this.records[index].Script,
-            Time: Date.now().toLocaleString(),
+            Time: new Date().toLocaleString(),
             Type: 'High',
-            Current_value: randomValue
+            Current_value: this.randomValue
           };
           this.data1.push(curruntRecord3);
           this.cdr.markForCheck();
-          alert("The difference (" + difference.toFixed(2) + "%) exceeds 10% of Pvalue. The random value is higher.");
-      } else {
+            this.toastr.success("The difference (" + difference.toFixed(2) + "%) exceeds 10% of Pvalue. The random value is higher.");
+     } else {
 
-        alert("The difference (" + difference.toFixed(2) + "%) exceeds 10% of Pvalue. The random value is lower.");
 
         const curruntRecord3 = {
           Si: this.records[index].Si,
@@ -285,14 +306,14 @@ export class DashComponent implements OnInit {
           C_id: this.records[index].C_id,
           Status: this.records[index].Status,
           Script: this.records[index].Script,
-          Time: Date.now().toLocaleString(),
+          Time: new Date().toLocaleString(),
           Type: 'Low',
-          Current_value: randomValue
+          Current_value: this.randomValue
         };
 
         this.data1.push(curruntRecord3);
         this.cdr.markForCheck();
-          alert("The difference (" + difference.toFixed(2) + "%) exceeds 10% of Pvalue. The random value is lower.");
+          this.toastr.error("The difference (" + difference.toFixed(2) + "%) exceeds 10% of Pvalue. The random value is lower.");
       }
       }
       index++;
@@ -320,6 +341,49 @@ stopMonitoring() {
 startMing(){
   console.log(this.data1,"data1");
   
+}
+
+
+ showToast(message, type) {
+  const toastContainer = document.getElementById('toastContainer');
+
+  // Create a new toast element
+  const toast = document.createElement('div');
+  toast.classList.add('toast');
+  toast.classList.add('show');
+  toast.setAttribute('role', 'alert');
+  toast.setAttribute('aria-live', 'assertive');
+  toast.setAttribute('aria-atomic', 'true');
+
+  // Set toast type (success, danger, etc.)
+  if (type === 'success') {
+    toast.classList.add('bg-success');
+  } else if (type === 'error') {
+    toast.classList.add('bg-danger');
+  } else {
+    toast.classList.add('bg-info');
+  }
+
+  // Set toast content
+  toast.innerHTML = `
+    <div class="toast-header">
+      <strong class="mr-auto">${type}</strong>
+      <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="toast-body">
+      ${message}
+    </div>
+  `;
+
+  // Append toast to container
+  toastContainer.appendChild(toast);
+
+  // Hide the toast after 5 seconds
+  setTimeout(() => {
+    toast.remove();
+  }, 5000);
 }
 
 

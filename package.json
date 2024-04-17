@@ -31,6 +31,7 @@
     "moment": "^2.29.4",
     "ngx-easy-table": "^15.5.0",
     "ngx-permissions": "^16.0.1",
+    "ngx-toastr": "^18.0.0",
     "rxjs": "7.8.0",
     "sweetalert2": "^11.8.0",
     "tslib": "2.4.0",

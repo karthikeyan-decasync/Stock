@@ -7,8 +7,11 @@ import { DashComponent } from './modules/general/dash/dash.component';
 import { ReportMainComponent } from './modules/general/reports/main-page/main';
 import { NavLinkComponent } from './modules/general/nav_links/nav-link';
 
+
 const routes: Routes = [
   {path: '',   redirectTo: '/home', pathMatch: 'full'},
+  
+
   {path: 'login',  loadChildren: () => import('./modules/general/login/login.module')
   .then(mod => mod.LoginModule)},
   { path: 'home', component: HomeComponent, },
