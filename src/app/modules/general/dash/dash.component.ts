@@ -1,12 +1,13 @@
 import { ApiService } from './../service/api.service';
-import { Component, OnInit, VERSION, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, VERSION, ViewChild, ChangeDetectionStrategy, 
+  ChangeDetectorRef, } from '@angular/core';
 import { Meta } from '@angular/platform-browser';
 import { environment } from '../../../../environments/environment';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NgxPermissionsService } from 'ngx-permissions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { Columns, Config, DefaultConfig } from 'ngx-easy-table';
+import { Columns, Config, DefaultConfig, } from 'ngx-easy-table';
 
 
 interface Company {
@@ -29,17 +30,22 @@ export class CsvData {
   public Script: string;
 }
 
-interface second {
+interface Second {
   C_id: number;
-  Token: number;
+  Si: number;
   Pvalue: number;
   Status: string;
+  Script: string;
+  Type: string;
+  Current_value: number;
+  Time:string;
 }
 
 @Component({
   selector: 'app-dash',
   templateUrl: './dash.component.html',
-  styleUrls: ['./dash.component.css']
+  styleUrls: ['./dash.component.css'],
+ 
 })
 export class DashComponent implements OnInit {
 
@@ -53,13 +59,13 @@ export class DashComponent implements OnInit {
   purchase_value = 1000;
 
   public columns1: Columns[] = [
-    { key: 'Si', title: 'Si'}, 
-    { key: 'Pvalue', title: 'pvalue'},
-    { key: 'Status', title: 'Status'},
-    { key: 'Script', title: 'Script'},
-    { key: 'C_id', title: 'C_id'},
-    { key: 'Time', title: 'Time'},
-    
+    { key: 'Si', title: 'Si' },
+    { key: 'Pvalue', title: 'pvalue' },
+    { key: 'Status', title: 'Status' },
+    { key: 'Script', title: 'Script' },
+    { key: 'C_id', title: 'C_id' },
+    { key: 'Time', title: 'Time' },
+
   ];
 
   public columns: Columns[] = [
@@ -71,11 +77,11 @@ export class DashComponent implements OnInit {
     { key: 'Script', title: 'Script' },
   ];
 
-  data1: second[] = [];
+  data1: Second[] = [];
   data: Company[] = [];
   public configuration: Config;
 
-   monitoringInterval : any;
+  monitoringInterval: any;
 
   // name = environment.application.name;
   version = environment.application.version;
@@ -93,7 +99,7 @@ export class DashComponent implements OnInit {
   csvArr_try: Company[] = [];
   csvRecord: Company = null;
   constructor(private meta: Meta, public dialog: MatDialog, private ps: NgxPermissionsService,
-    private snackBar: MatSnackBar, private rs: Router, public api: ApiService) {
+    private snackBar: MatSnackBar, private rs: Router, public api: ApiService , private cdr:ChangeDetectorRef) {
     this.csvRecord = {
       Si: 0,
       Token: 0,
@@ -225,57 +231,95 @@ export class DashComponent implements OnInit {
   }
 
 
- 
 
 
 
 
 
-startMonitoring() {
+
+  startMonitoring() {
     let index = 0;
 
     const iterate = () => {
-        if (index < this.records.length) {
+      if (index < this.records.length) {
 
-            console.log(this.records[index].Pvalue);
-            const Pvalue = this.records[index].Pvalue;
-            // this.records[index].score = Math.floor(Math.random() * 100);
-           // console.log("Updated index " + index  );
+        console.log(this.records[index].Pvalue);
+        const Pvalue = this.records[index].Pvalue;
+        // this.records[index].score = Math.floor(Math.random() * 100);
+        // console.log("Updated index " + index  );
 
-            // Generate a random number between 700 and 900
-            const randomValue = Math.floor(Math.random() * (900 - 700 + 1)) + 700;
-            console.log("Random value:", randomValue);
-            
-            // Calculate the difference percentage
-            const difference = Math.abs(randomValue - Pvalue) / Pvalue * 100;
+        // Generate a random number between 700 and 900
+        const randomValue = Math.floor(Math.random() * (900 - 700 + 1)) + 700;
+        console.log("Random value:", randomValue);
 
-            // Check if the difference is greater than or less than 10% of Pvalue
-            if (difference > 10) {
-              if (randomValue > Pvalue) {
-                alert("The difference (" + difference.toFixed(2) + "%) exceeds 10% of Pvalue. The random value is higher.");
-            } else {
-                alert("The difference (" + difference.toFixed(2) + "%) exceeds 10% of Pvalue. The random value is lower.");
-            }
-            }
+        // Calculate the difference percentage
+        const difference = Math.abs(randomValue - Pvalue) / Pvalue * 100;
+
+        // Check if the difference is greater than or less than 10% of Pvalue
 
 
+      if (difference > 10) {
+        if (randomValue > Pvalue) {
+          alert("The difference (" + difference.toFixed(2) + "%) exceeds 10% of Pvalue. The random value is higher.");
 
-            index++;
-            this.monitoringInterval =  setTimeout(iterate, 2000);
-        } else {
-            // Reset index to 0 and repeat the iteration
-            console.log("Updated index " + index  );
-            index = 0;
-            this.monitoringInterval = setTimeout(iterate, 2000);
-        }
-    };
+          const curruntRecord3 = {
+            Si: this.records[index].Si,
+            Pvalue: this.records[index].Pvalue,
+            C_id: this.records[index].C_id,
+            Status: this.records[index].Status,
+            Script: this.records[index].Script,
+            Time: Date.now().toLocaleString(),
+            Type: 'High',
+            Current_value: randomValue
+          };
+          this.data1.push(curruntRecord3);
+          this.cdr.markForCheck();
+          alert("The difference (" + difference.toFixed(2) + "%) exceeds 10% of Pvalue. The random value is higher.");
+      } else {
 
-    // Start the initial iteration
-    iterate();
+        alert("The difference (" + difference.toFixed(2) + "%) exceeds 10% of Pvalue. The random value is lower.");
+
+        const curruntRecord3 = {
+          Si: this.records[index].Si,
+          Pvalue: this.records[index].Pvalue,
+          C_id: this.records[index].C_id,
+          Status: this.records[index].Status,
+          Script: this.records[index].Script,
+          Time: Date.now().toLocaleString(),
+          Type: 'Low',
+          Current_value: randomValue
+        };
+
+        this.data1.push(curruntRecord3);
+        this.cdr.markForCheck();
+          alert("The difference (" + difference.toFixed(2) + "%) exceeds 10% of Pvalue. The random value is lower.");
+      }
+      }
+      index++;
+      this.monitoringInterval =  setTimeout(iterate, 2000);
+  } else {
+      // Reset index to 0 and repeat the iteration
+      console.log("Updated index " + index  );
+      index = 0;
+      this.monitoringInterval = setTimeout(iterate, 2000);
+  }
+};
+
+// Start the initial iteration
+iterate();
 }
 
+
+
+
+
 stopMonitoring() {
-    clearTimeout(this.monitoringInterval);
+  clearTimeout(this.monitoringInterval);
+}
+
+startMing(){
+  console.log(this.data1,"data1");
+  
 }
 
 
