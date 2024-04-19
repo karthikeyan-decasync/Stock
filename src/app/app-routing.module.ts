@@ -9,7 +9,7 @@ import { NavLinkComponent } from './modules/general/nav_links/nav-link';
 
 
 const routes: Routes = [
-  {path: '',   redirectTo: '/home', pathMatch: 'full'},
+  {path: '',   redirectTo: '/login', pathMatch: 'full'},
   
 
   {path: 'login',  loadChildren: () => import('./modules/general/login/login.module')

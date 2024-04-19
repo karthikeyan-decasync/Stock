@@ -151,6 +151,7 @@ import { LoaderComponent } from './modules/general/loader/main';
       timeOut: 15000,
       preventDuplicates: true,
       closeButton: true,
+      // positionClass: 'bottom-right',
     }),
     AutocompleteLibModule,
     NgxPermissionsModule.forRoot(),

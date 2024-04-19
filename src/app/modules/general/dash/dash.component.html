@@ -1,142 +1,201 @@
-<div class="container py-5">
-  <!-- <div class="row">
-    <div class="col-12 col-sm-12 col-md-12 col-lg-3 col-xl-3 text-center mb-2">
-      <h1 class="h5">
-        <i class="fas fa-laptop fa-lg me-2 text-primary"></i>
-        {{ name }}
-        <i class="fas fa-mobile-alt fa-lg ms-2 text-primary"></i>
-      </h1>
+<mat-tab-group animationDuration="10ms">
+  <mat-tab label="Chart list">
+    
+    <div class="mt-5">
+      <div class="col-md-12 text-center">
+        <h2 class="h5"> Chart viber ver 0.0.1 <i class="fas fa-list ms-1"></i></h2>
+      </div>
     </div>
-    <div class="col-12 col-sm-12 col-md-12 col-lg-4 col-xl-3 text-center text-danger mb-2">
-      <h2 class="h5">
-        {{ version }}<i class="fab fa-angular fa-lg ms-2"></i>
-      </h2>
-    </div>
-    <div class="col-12 col-sm-12 col-md-12 col-lg-4 col-xl-3 text-center text-primary mb-2">
-      <h2 class="h5">
-        {{ bootstrap }}<i class="fab fa-bootstrap fa-lg ms-2"></i>
-      </h2>
-    </div>
-    <div class="col-12 col-sm-12 col-md-12 col-lg-4 col-xl-3 text-center text-success mb-2">
-      <h2 class="h5">
-        {{ fontawesome }}<i class="fab fa-font-awesome-flag fa-lg ms-2"></i>
-      </h2>
-    </div>
-  </div> -->
-
-  <div class="row mb-1">
-    <div class="col-md-12 text-center">
-      <h2 class="h5"> Chart viber ver 0.0.1 <i class="fas fa-list ms-1"></i></h2>
-    </div>
-  </div>
-  <hr>
- 
 
 
-  <!--  *ngxPermissionsOnly="['Admin','Staff','Member']"  -->
-  <div class="row pt-2">
-    <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-2">
-      <div class="card nga-card bg-light mb-3">
-      
-          <div class="card-header">
+    <div class="example-container" style="padding: 35px;">
+      <div class="col-12 col-sm-8 col-md-8 col-lg-8 col-xl-8">
+        <h1 class="h5">Upload Holdings <span style="color: blue; ">(.CSV)</span></h1>
+        <label for="txtFileUpload" class="file-upload">
+          <input style="display: none;" type="file" #csvReader name="Upload CSV" id="txtFileUpload"
+            (change)="uploadListener($event)" accept=".csv" />
+          <span class="file-upload-icon mt-5">
+            <i style="font-size: 20px; color: blue; margin-top: 20px;" class="fas fa-upload"></i>
+          </span>
+          &nbsp;
+          <span class="file-upload-text">Choose File</span>
+        </label>
+        &nbsp;&nbsp;
+        <button [disabled]="records.length === 0 || monitoring" *ngIf="records.length > 0" (click)="startMonitoring()"
+          class="btn btn-primary">
+          <i class="fas fa-play"></i> Start Monitoring
+        </button>
+        &nbsp;&nbsp;
+        <button [disabled]="records.length === 0 || !monitoring" *ngIf="records.length > 0" (click)="stopMonitoring()"
+          class="btn btn-primary">
+          <i class="fas fa-stop"></i> Stop Monitoring
+        </button>
+        &nbsp;&nbsp;
+        <button *ngIf="records.length > 0" (click)="fileReset()" class="btn btn-primary">
+          <i class="fas fa-sync-alt"></i> Reset
+        </button>
+      </div>
+
+
+      <h2 *ngIf="records.length > 0" class="text-center mt-5">CSV Data</h2>
+
+
+      <ngx-table *ngIf="records.length > 0" [configuration]="configuration" [data]="data" [columns]="columns"
+        (event)="onEvent($event)">
+        <ng-template let-row>
+          <td>
+            <div class="font-small">{{ row.Si }}</div>
+          </td>
+          <td>
+            <span class="font-small">{{ row.Token }}</span>
+          </td>
+          <td>
+            <span class="font-small">{{ row.Pvalue }}</span>
+          </td>
+          <td>
+            <span class="font-small">{{ row.C_id }}</span>
+          </td>
+          <td>
+            <span class="font-small">{{ row.Status }}</span>
+          </td>
+          <td>
+            <span class="font-small">{{ row.Script }}</span>
+          </td>
+          <!-- <td>
+          <button class="btn btn-primary btn-sm" (click)="showModal()">
+            Edit
+          </button>
+        </td> -->
+        </ng-template>
+      </ngx-table>
+
+      {{jsondatadisplay}}
+    </div>
+  </mat-tab>
+
+  <mat-tab label="Notifications">
+
+    <h2 class="text-center text-danger mt-5" *ngIf="data1.length === 0">No notifications please run monitoring first and then get notifications</h2>
+
+    <div class="example-container" style="padding: 10px;" *ngIf="data1.length > 0">
+      <h2 style="text-decoration: underline;" *ngIf="data1.length > 0" class="text-center text-primary">Notifications</h2>
+    
+      <div class="example-header">
+        <mat-form-field class="filter">
+          <input matInput #input (keyup)="applyFilter(input.value)" placeholder="Filter">
+        </mat-form-field>
+      </div>
+      <div class="example-container mat-elevation-z8">
+    
+        <mat-table class="table-math" #table [dataSource]="dataSource" matSort>
+    
+    
+          <ng-container matColumnDef="Si">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Si </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.Si}} </mat-cell>
+          </ng-container>
+    
+    
+          <ng-container matColumnDef="C_id">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> C_id </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.C_id}} </mat-cell>
+          </ng-container>
+    
+    
+          <ng-container matColumnDef="Pvalue">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Pvalue </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.Type}} </mat-cell>
+          </ng-container>
+    
+          <ng-container matColumnDef="Status">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.Status}} </mat-cell>
+          </ng-container>
+    
+          <ng-container matColumnDef="Script">
+            <mat-header-cell *matHeaderCellDef> Script </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.Script}} </mat-cell>
+          </ng-container>
+    
+          <ng-container matColumnDef="Current_value">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Current_value </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.Current_value}} </mat-cell>
+          </ng-container>
+    
+          <ng-container matColumnDef="Time">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Time </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.Time}} </mat-cell>
+          </ng-container>
+    
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+        <mat-paginator [length]="100" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
+        </mat-paginator>
+      </div>
+    
+    </div>
+    
+
+  </mat-tab>
+</mat-tab-group>
+
+
+
+
+
+
+<!--  *ngxPermissionsOnly="['Admin','Staff','Member']"  -->
+<div class="row pt-2">
+  <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-2">
+    <div class=" nga-card bg-light mb-3">
+
+      <!-- <div class="card-header">
             <div class="row">
               <div class="col-10 col-xl-10">
                 <h2 class="card-title h2">Holding list</h2>
-
+ 
                 <h2 style="color: navy;"> {{book_list_count}}  </h2>
-            
+           
               </div>
               <div class="col-2 col-xl-2">
                 <i class="fab fa-bootstrap text-primary" style="font-size: 20px;"></i>
               </div>
             </div>
-          </div>
-          <div class="card-body">
+          </div> -->
+      <!-- <div class="card-body">
             <p class="card-text"> List Of Unique holdings</p>
-          </div>
+          </div> -->
 
-          <div class="card-footer d-flex ">
+      <!-- <div class="card-footer d-flex ">
             <small *ngxPermissionsOnly="['Admin','Staff']"  class="text-muted">
               <a  matTooltip="Add New book"
                 matTooltipClass="example-tooltip-red1"   data-target="#addModal"  style="float: right;cursor: pointer;"   data-toggle="modal"    >
                 <i class="fa fa-plus-circle"></i>  Add   </a>
             </small>
             &nbsp; &nbsp;
-  
-            <!-- <small class="text-muted">
-              <a  matTooltip="View books"
-                matTooltipClass="example-tooltip-red1"   data-target="#addModal"  style="float: right;cursor: pointer;"   data-toggle="modal"   (click)="view_book()" >
-                <i class="fa fa-eye"></i>  View   </a> 
-            </small>  -->
-            <!-- <input type="file" accept=".csv"(change)="handleFileSelect($event)"> -->
-
-           </div>
-      </div>
+ 
+       
+ 
+           </div> -->
     </div>
+  </div>
 
-    <div class="col-12 col-sm-8 col-md-8 col-lg-8 col-xl-8">
+  <!-- <div class="col-12 col-sm-8 col-md-8 col-lg-8 col-xl-8">
       <h1>Upload Holdings (.CSV)</h1>
       <input type="file" #csvReader name="Upload CSV" id="txtFileUpload" (change)="uploadListener($event)" accept=".csv" />
-
-      <!-- <a href="javascript:;" *ngIf="records.length > 0" (click)="getJsonData()" class="btn btn-primary">Convert Json </a>
-        &nbsp;&nbsp; -->
+ 
         <a href="javascript:;" *ngIf="records.length > 0" (click)="startMonitoring()" class="btn btn-primary">Start Monitoring </a>
         &nbsp;&nbsp;
-
-        <a href="javascript:;" *ngIf="records.length > 0" (click)="startMing()" class="btn btn-primary">Start exp </a>
-        &nbsp;&nbsp;
-
+ 
+ 
         <a href="javascript:;" *ngIf="records.length > 0" (click)="stopMonitoring()" class="btn btn-primary">Stop Monitoring </a>
         &nbsp;&nbsp;
-        
-
-      <a href="javascript:;" *ngIf="records.length > 0" (click)="fileReset()" class="btn btn-primary">Reset </a>  
-    </div>
-
-    
-
+       
  
+      <a href="javascript:;" *ngIf="records.length > 0" (click)="fileReset()" class="btn btn-primary">Reset </a>  
+    </div> -->
 
-
-
-    <h2 *ngIf="records.length > 0" class="text-center">CSV Data</h2>
-
-
-     <ngx-table  *ngIf="records.length > 0"
-    [configuration]="configuration"
-    [data]="data"
-    [columns]="columns"
-    (event)="onEvent($event)"
-  >
-    <ng-template let-row>
-      <td>
-        <div class="font-small">{{ row.Si }}</div>
-      </td>
-      <td>
-        <span class="font-small">{{ row.Token }}</span>
-      </td>
-      <td>
-        <span class="font-small">{{ row.Pvalue }}</span>
-      </td>
-      <td>
-        <span class="font-small">{{ row.C_id }}</span>
-      </td>
-      <td>
-        <span class="font-small">{{ row.Status }}</span>
-      </td>
-      <td>
-        <span class="font-small">{{ row.Script }}</span>
-      </td>
-      <!-- <td>
-        <button class="btn btn-primary btn-sm" (click)="showModal()">
-          Edit
-        </button>
-      </td> -->
-    </ng-template>
-  </ngx-table> 
-
-  {{jsondatadisplay}}
-  
   <!-- <div *ngIf="modal" class="modal active">
     <div class="modal-overlay"></div>
     <div class="modal-container" role="document">
@@ -160,7 +219,7 @@
     </div>
   </div>
    
-
+ 
   <table class="table"  *ngIf="records.length > 0">
     <thead class="thead-dark" >
       <tr>
@@ -177,43 +236,11 @@
         <td>{{record.max}}</td>
         <td>{{record.score}}</td>
       </tr>
-  
+ 
     </tbody>
   </table> -->
 
-  <h2 class="text-center">Notifications</h2>
-
-  <!-- <ngx-table 
-  *ngIf="data1.length > 0"
-  [configuration]="configuration"
-    [data]="data1"
-    [columns]="columns1"
-  >
-    <ng-template let-row>
-      <td>
-        <div class="font-small">{{ row.Si }}</div>
-      </td>
-      <td>
-        <span class="font-small">{{ row.Script }}</span>
-      </td>
-      <td>
-        <span class="font-small">{{ row.Pvalue }}</span>
-      </td>
-      <td>
-        <span class="font-small">{{ row.C_id }}</span>
-      </td>
-      <td>
-        <span class="font-small">{{ row.Status }}</span>
-      </td>
-      <td>
-       ji
-      </td>
-
-    </ng-template>
-  </ngx-table> 
-
-   -->
-   <table class="table"  *ngIf="records.length > 0">
+  <!-- <table class="table"  *ngIf="data1.length > 0">
     <thead class="thead-dark" >
       <tr>
         <th scope="col">si</th>
@@ -235,11 +262,78 @@
         <td>{{record.Current_value}}</td>
         <td>{{record.Time}}</td>
       </tr>
-  
+ 
     </tbody>
-  </table>
+  </table> -->
 
 
-  </div>
 </div>
+
+
+
+
+
+
+
+
+
+<!-- <div class="example-header">
+  <mat-form-field>
+    <input matInput  #input (keyup)="applyFilter(input.value)" placeholder="Filter">
+  </mat-form-field>
+</div>
+
+<div class="example-container mat-elevation-z8">
+
+  <mat-table [dataSource]="dataSource" matSort>
+
+    <ng-container matColumnDef="Si">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Si </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.Si}} </mat-cell>
+    </ng-container>
+
+
+    <ng-container matColumnDef="C_id">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> C_id </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.C_id}} </mat-cell>
+    </ng-container>
+
+
+    <ng-container matColumnDef="Pvalue">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Pvalue </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.Type}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="Status">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.Status}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="Script">
+      <mat-header-cell *matHeaderCellDef> Script </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.Script}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="Current_value">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Current_value </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.Current_value}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="Time">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Time </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.Time}} </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;">
+    </mat-row>
+  </mat-table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</div> -->
+
+
+<!-- Copyright 2018 Google Inc. All Rights Reserved.
+    Use of this source code is governed by an MIT-style license that
+    can be found in the LICENSE file at http://angular.io/license -->
 
