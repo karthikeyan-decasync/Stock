@@ -1,7 +1,7 @@
 import { ApiService } from './../service/api.service';
 import {
   Component, OnInit, VERSION, ViewChild, ChangeDetectionStrategy,
-  ChangeDetectorRef,
+  ChangeDetectorRef,ElementRef
 } from '@angular/core';
 import { Meta } from '@angular/platform-browser';
 import { environment } from '../../../../environments/environment';
@@ -14,10 +14,7 @@ import { ToastrService } from 'ngx-toastr';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
- 
-
 export interface Element {
- 
 
   C_id: number;
   Si: number;
@@ -26,11 +23,12 @@ export interface Element {
   Script: string;
   Type: string;
   Current_value: number;
+  percentage: number;
   Time: string;
 }
 
 const ELEMENT_DATA: Element[] = [
-  {Si:2,C_id: 1, Pvalue: 44,Status: 'H',Script:'SBIN',Type:'High',Current_value: 100,Time:'10:00:00'},
+  {Si:2,C_id: 1, Pvalue: 44,Status: 'H',Script:'SBIN',Type:'High',Current_value: 100, percentage: 0, Time:'10:00:00'},
 ];
 
 
@@ -62,6 +60,7 @@ interface Second {
   Script: string;
   Type: string;
   Current_value: number;
+  percentage: number;
   Time: string;
 }
  
@@ -80,7 +79,7 @@ export class DashComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   
-  displayedColumns = ['Si','C_id', 'Pvalue','Status','Script','Current_value','Time'];
+  displayedColumns = ['Si','C_id', 'Pvalue','Status','Script','Current_value','percentage','Time'];
   dataSource = new MatTableDataSource(null);
 
 
@@ -269,12 +268,6 @@ export class DashComponent implements OnInit {
   }
  
  
- 
- 
- 
- 
- 
- 
   startMonitoring() {
     let index = 0;
     this.monitoring=true;
@@ -290,14 +283,14 @@ export class DashComponent implements OnInit {
           "exch_name": "NSE",
           "token": this.records[index].Token.toString(),
         }
-        // this.api.g_q_shoonya(sample).subscribe((res: any) => {
-        //   console.log(res);
-        //  this.randomValue = res.data.lp;
+        this.api.g_q_shoonya(sample).subscribe((res: any) => {
+          console.log(res);
+         this.randomValue = res.data.lp;
         
-        //   this.check_with(this.randomValue,Pvalue,index-1);
+          this.check_with(this.randomValue,Pvalue,index-1);
  
-        // })
-        this.check_with(250,Pvalue,index);
+        })
+        // this.check_with(250,Pvalue,index);
        
         index++;
         this.monitoringInterval = setTimeout(iterate, 10000);
@@ -329,13 +322,20 @@ export class DashComponent implements OnInit {
           Script: this.records[index].Script,
           Time: new Date().toLocaleString(),
           Type: 'High',
+          percentage: difference,
           Current_value: this.randomValue
         };
         this.data1.push(curruntRecord3);
         this.cdr.markForCheck();
-        const audio = new Audio('../assets/mixkit-arabian-mystery-harp-notification-2489.wav');
+        const audio = new Audio('../assets/success.wav');
         this.toastr.success(" Stock - "+this.records[index].Script+ " Triggered a (" + difference.toFixed(2) + "%) Higher value from the Purchase value For the client - "+this.records[index].C_id+ " ");
         audio.play();
+        this.dataSource = new MatTableDataSource(this.data1);
+        console.log(this.dataSource,"=======================================");
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+
+
       } else {
         const curruntRecord3 = {
           Si: this.records[index].Si,
@@ -345,15 +345,18 @@ export class DashComponent implements OnInit {
           Script: this.records[index].Script,
           Time: new Date().toLocaleString(),
           Type: 'Low',
+          percentage: difference,
           Current_value: this.randomValue
         };
         this.data1.push(curruntRecord3);
         this.cdr.markForCheck();
-        const audio = new Audio('../assets/mixkit-arabian-mystery-harp-notification-2489.wav');
+        const audio = new Audio('../assets/error.wav');
        
         this.toastr.error(" Stock - "+this.records[index].Script+ " Triggered a (" + difference.toFixed(2) + "%) lower value from the Purchase value For the client - "+this.records[index].C_id+ " ");
         audio.play();
         this.dataSource = new MatTableDataSource(this.data1);
+        console.log(this.dataSource,"=======================================");
+        
         // ngAfterViewInit() {
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
@@ -367,20 +370,31 @@ export class DashComponent implements OnInit {
     clearTimeout(this.monitoringInterval);
     this.monitoring=false;
   }
- 
- 
- 
- 
- 
-  show() {
-   
-  }
- 
+
+  ExportTOExcel(){
+
+    let csvData = this.displayedColumns.join(',') + '\n';
+  
+    // Add data rows
+    csvData += this.dataSource.data.map(row => this.displayedColumns.map(column => row[column]).join(',')).join('\n');
+  
+    // Create CSV file
+    const blob = new Blob([csvData], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    
+    // Create a link element and trigger download
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'Notifications.csv';
+    document.body.appendChild(a);
+    a.click();
+    
+    // Cleanup
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
 }
 
-const COLORS = ['maroon', 'red', 'orange', 'yellow', 'olive', 'green', 'purple',
-  'fuchsia', 'lime', 'teal', 'aqua', 'blue', 'navy', 'black', 'gray'];
-const NAMES = ['Maia', 'Asher', 'Olivia', 'Atticus', 'Amelia', 'Jack',
-  'Charlotte', 'Theodore', 'Isla', 'Oliver', 'Isabella', 'Jasper',
-  'Cora', 'Levi', 'Violet', 'Arthur', 'Mia', 'Thomas', 'Elizabeth'];
 
+
+
+}

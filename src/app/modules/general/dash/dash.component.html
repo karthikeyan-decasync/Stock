@@ -1,16 +1,15 @@
+<div class="ng-container">
+  <div class="col-md-12 text-center">
+    <h2 class="h4"> Chart viber ver 0.0.1 <i class="fas fa-list ms-1"></i></h2>
+  </div>
+</div>
+
+
 <mat-tab-group animationDuration="10ms">
   <mat-tab label="Chart list">
-    
-    <div class="mt-5">
-      <div class="col-md-12 text-center">
-        <h2 class="h5"> Chart viber ver 0.0.1 <i class="fas fa-list ms-1"></i></h2>
-      </div>
-    </div>
-
-
     <div class="example-container" style="padding: 35px;">
       <div class="col-12 col-sm-8 col-md-8 col-lg-8 col-xl-8">
-        <h1 class="h5">Upload Holdings <span style="color: blue; ">(.CSV)</span></h1>
+        <h1 class="h5">Upload Holdings <span style="color: blue; font-size: 20px; ">(.CSV)</span></h1>
         <label for="txtFileUpload" class="file-upload">
           <input style="display: none;" type="file" #csvReader name="Upload CSV" id="txtFileUpload"
             (change)="uploadListener($event)" accept=".csv" />
@@ -77,22 +76,24 @@
 
     <h2 class="text-center text-danger mt-5" *ngIf="data1.length === 0">No notifications please run monitoring first and then get notifications</h2>
 
-    <div class="example-container" style="padding: 10px;" *ngIf="data1.length > 0">
-      <h2 style="text-decoration: underline;" *ngIf="data1.length > 0" class="text-center text-primary">Notifications</h2>
-    
-      <div class="example-header">
-        <mat-form-field class="filter">
-          <input matInput #input (keyup)="applyFilter(input.value)" placeholder="Filter">
-        </mat-form-field>
-      </div>
+    <div class="example-container" style="padding: 10px;" *ngIf="data1.length > 0">    
+<div style="display: ruby;">
+        <div class="example-header">
+          <mat-form-field class="filter">
+            <input matInput #input (keyup)="applyFilter(input.value)" placeholder="Filter">
+          </mat-form-field>
+        </div>
+        <button style="margin-left: 10px;" mat-raised-button color="primary" (click)="ExportTOExcel()">Export as CSV</button>
+  
+</div>
       <div class="example-container mat-elevation-z8">
     
-        <mat-table class="table-math" #table [dataSource]="dataSource" matSort>
+        <mat-table #table [dataSource]="dataSource" matSort>
     
     
           <ng-container matColumnDef="Si">
             <mat-header-cell *matHeaderCellDef mat-sort-header> Si </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.Si}} </mat-cell>
+            <mat-cell  *matCellDef="let element"> {{element.Si}} </mat-cell>
           </ng-container>
     
     
@@ -104,13 +105,13 @@
     
           <ng-container matColumnDef="Pvalue">
             <mat-header-cell *matHeaderCellDef mat-sort-header> Pvalue </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.Type}} </mat-cell>
+            <mat-cell *matCellDef="let element"> {{element.Pvalue}} </mat-cell>
           </ng-container>
     
-          <ng-container matColumnDef="Status">
+          <ng-containern matColumnDef="Status">
             <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.Status}} </mat-cell>
-          </ng-container>
+            <mat-cell *matCellDef="let element" [ngClass]="{'status-green': element.Type === 'High', 'status-red': element.Type === 'Low'}">{{element.Type}} </mat-cell>
+          </ng-containern>
     
           <ng-container matColumnDef="Script">
             <mat-header-cell *matHeaderCellDef> Script </mat-header-cell>
@@ -121,6 +122,13 @@
             <mat-header-cell *matHeaderCellDef mat-sort-header> Current_value </mat-header-cell>
             <mat-cell *matCellDef="let element"> {{element.Current_value}} </mat-cell>
           </ng-container>
+
+          <ng-container matColumnDef="percentage">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Change in % </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.percentage.toFixed(2)}} </mat-cell>
+          </ng-container>
+
+          
     
           <ng-container matColumnDef="Time">
             <mat-header-cell *matHeaderCellDef mat-sort-header> Time </mat-header-cell>
@@ -129,13 +137,13 @@
     
           <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
           <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
         </mat-table>
-        <mat-paginator [length]="100" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
-        </mat-paginator>
+        <mat-paginator [length]="100" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
       </div>
-    
+
+
     </div>
-    
 
   </mat-tab>
 </mat-tab-group>

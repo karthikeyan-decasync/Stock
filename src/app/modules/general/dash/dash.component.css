@@ -1,3 +1,7 @@
+body{
+  padding: 0;
+  margin: 0;
+}
 .nga-card {
   display: block;
   background-color: rgba(255, 255, 255, .8);
@@ -34,6 +38,11 @@
   font-weight: 500;
   text-decoration: underline;
 }
+.h4{
+  font-size: 25px;
+  font-weight: 500;
+  text-decoration: underline;
+}
 .file-upload-text{
   font-size: 20px;
   font-weight: 500;
@@ -59,4 +68,21 @@
 .filter{
   padding: 35px;
   margin-left: 130px;
+}
+.status-green {
+  background: rgb(16, 186, 16);
+  color: white; /* Change to your desired color */
+  font-weight: 900;
+  font-size: larger;
+  text-align: center;
+  border: 1px solid;
+}
+
+.status-red {
+  background: rgb(201, 42, 42);
+  color: white; /* Change to your desired color */
+  font-weight: 900;
+  font-size: larger;
+  text-align: center;
+  border: 1px solid;
 }
