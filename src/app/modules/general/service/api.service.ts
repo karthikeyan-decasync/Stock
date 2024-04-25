@@ -8,9 +8,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, tap,shareReplay } from 'rxjs/operators';
 
 
-
 import { User , Book_list} from './model';
-
 
 
 export interface Req_model {
@@ -21,10 +19,6 @@ export interface Req_model {
  
 }
 
-
-
-
-
 export interface Share_model {
   id: number;
   cuc_id : number;
@@ -34,12 +28,20 @@ export interface Share_model {
   status : number;
 }
 
+interface  Stock_list {
+  Exchange: string,
+  Token: number,
+  LotSize : number,
+  Symbol: string,
+  TradingSymbol : string,
+  Instrument : string,
+  TickSize : number
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
-
-
     private bUrl = 'http://127.0.0.1:3000/';
     private cUrl = 'http://127.0.0.1:9011/api/';
     private publicUrl = 'http://127.0.0.1:9011/public/';
@@ -48,22 +50,14 @@ export class ApiService {
   //  private cUrl = 'https://ysgk.in/lib-api/private/';
   //  private publicUrl = 'https://ysgk.in/lib-api/public/';
 
-  
-
-  
    public isMobileResolution: boolean = false;
    public logged_in : boolean = false;
  
     user : User;
 
-  figure_grand : string= '';
+  figure_grand : string= ''; 
 
-
- 
-
-
-  public post_demo : any = {invo_string : "",is_b2b:false,com_id:null,e_no:0,num_to_string:0}  
-   
+  public post_demo : any = {invo_string : "",is_b2b:false,com_id:null,e_no:0,num_to_string:0}    
   
   public navtoken:boolean=false;
   public showModal:string;
@@ -98,7 +92,10 @@ export class ApiService {
     this.displayModal = 'none';
   }
 
- 
+ getData_stock_list() : Observable<Stock_list[]>
+ {
+  return this.http.get<Stock_list[]>('/assets/datas.json');
+ }
  
   login(model: any) { 
     let body = JSON.stringify(model);  

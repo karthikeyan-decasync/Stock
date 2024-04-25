@@ -16,9 +16,9 @@ import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 export interface Element {
 
-  C_id: number;
+  Client_code: number;
   Si: number;
-  Pvalue: number;
+  avg_purchase_value: number;
   Status: string;
   Script: string;
   Type: string;
@@ -28,15 +28,16 @@ export interface Element {
 }
 
 const ELEMENT_DATA: Element[] = [
-  {Si:2,C_id: 1, Pvalue: 44,Status: 'H',Script:'SBIN',Type:'High',Current_value: 100, percentage: 0, Time:'10:00:00'},
+  {Si:2,Client_code: 1, avg_purchase_value: 44,Status: 'H',Script:'SBIN',Type:'High',Current_value: 100, percentage: 0, Time:'10:00:00'},
 ];
 
 
 interface Company {
   Si: number;
   Token: number;
-  Pvalue: number;
-  C_id: number;
+  avg_purchase_value: number;
+  Client_code: string;
+  Client_name: string;
   Status: string;
   Script: string;
 }
@@ -46,16 +47,17 @@ interface Company {
 export class CsvData {
   public Si: number;
   public Token: number;
-  public Pvalue: number;
-  public C_id: number;
+  public avg_purchase_value: number;
+  public Client_code: string;
+  public Client_name: string;
   public Status: string;
   public Script: string;
 }
  
 interface Second {
-  C_id: number;
+  Client_code: string;
   Si: number;
-  Pvalue: number;
+  avg_purchase_value: number;
   Status: string;
   Script: string;
   Type: string;
@@ -64,6 +66,15 @@ interface Second {
   Time: string;
 }
  
+interface  Stock_list {
+  Exchange: string,
+  Token: number,
+  LotSize : number,
+  Symbol: string,
+  TradingSymbol : string,
+  Instrument : string,
+  TickSize : number
+}
 
 
 @Component({
@@ -79,7 +90,7 @@ export class DashComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   
-  displayedColumns = ['Si','C_id', 'Pvalue','Status','Script','Current_value','percentage','Time'];
+  displayedColumns = ['Si','Client_code', 'avg_purchase_value','Status','Script','Current_value','percentage','Time'];
   dataSource = new MatTableDataSource(null);
 
 
@@ -96,10 +107,10 @@ export class DashComponent implements OnInit {
  
   public columns1: Columns[] = [
     { key: 'Si', title: 'Si' },
-    { key: 'Pvalue', title: 'pvalue' },
+    { key: 'avg_purchase_value', title: 'avg_purchase_value' },
     { key: 'Status', title: 'Status' },
     { key: 'Script', title: 'Script' },
-    { key: 'C_id', title: 'C_id' },
+    { key: 'Client_code', title: 'Client_code' },
     { key: 'Current_value', title: 'Current_value' },
     { key: 'Time', title: 'Time' },
  
@@ -107,15 +118,15 @@ export class DashComponent implements OnInit {
  
   public columns: Columns[] = [
     { key: 'Si', title: 'Si' },
-    { key: 'Token', title: 'Token' },
-    { key: 'Pvalue', title: 'pvalue' },
-    { key: 'C_id', title: 'C_id' },
-    { key: 'Status', title: 'Status' },
+    { key: 'avg_purchase_value', title: 'avg_purchase_value' },
+    { key: 'Client_code', title: 'Client_code' },
+    { key: 'Client_name', title: 'Client_name' },
     { key: 'Script', title: 'Script' },
   ];
  
   data1: Second[] = [];
   data: Company[] = [];
+  public stock_list : Stock_list[] = [];
   public configuration: Config;
  
   monitoringInterval: any;
@@ -140,8 +151,9 @@ export class DashComponent implements OnInit {
     this.csvRecord = {
       Si: 0,
       Token: 0,
-      Pvalue: 0,
-      C_id: 0,
+      avg_purchase_value: 0,
+      Client_code: '',
+      Client_name: '',
       Status: '',
       Script: ''
     };
@@ -174,6 +186,16 @@ export class DashComponent implements OnInit {
           ' It applies Routing, Lazy loading, Server side rendering and Progressive Web App (PWA)'
       });
  
+      
+
+
+      this.api.getData_stock_list().subscribe(data =>{
+        
+      this.stock_list = data;
+
+    
+        
+      })
  
   }
  
@@ -192,9 +214,14 @@ export class DashComponent implements OnInit {
         let csvData = reader.result;
         let csvRecordsArray = (<string>csvData).split(/\r\n|\n/);
         let headersRow = this.getHeaderArray(csvRecordsArray);
+
+
+    
+
+
         this.records = this.getDataRecordsArrayFromCSVFile(csvRecordsArray, headersRow.length);
-        //console.log(this.records);
-        this.data = this.records;
+        // console.log(this.records);
+         this.data = this.records;
       };
  
       reader.onerror = function () {
@@ -209,22 +236,66 @@ export class DashComponent implements OnInit {
  
   
   getDataRecordsArrayFromCSVFile(csvRecordsArray: any, headerLength: any) {
-    for (let i = 1; i < csvRecordsArray.length; i++) {
-      let curruntRecord = (<string>csvRecordsArray[i]).split(',');
-      if (curruntRecord.length == headerLength) {
-     
+
+    console.log(csvRecordsArray,"240");
+    console.log(headerLength,"hl")
+
+
+    // for (let i = 1; i < csvRecordsArray.length; i++) 
+    for (let i = 1; i < 10; i++) 
+    {
+
+console.log(csvRecordsArray[i],"248")
+
+
+   let currentRecordx = csvRecordsArray[i];
+    let quotedData = currentRecordx.match(/"([^"]*)"/g);
+    if (quotedData) {
+        console.log("Quoted data found:", quotedData);
+         let curruntRecord = quotedData;
+
+          if (curruntRecord.length == headerLength) {     
+       const yoken = curruntRecord[0].trim().replace(/\s+EQ$/, '');     
         const csvc = {
-          Si: parseFloat(curruntRecord[0].trim()),
-          Token: parseFloat(curruntRecord[1].trim()),
-          Pvalue: parseFloat(curruntRecord[2].trim()),
-          C_id: parseFloat(curruntRecord[3].trim()),
-          Status: curruntRecord[4].trim(),
-          Script: curruntRecord[5].trim(),
+          Si:i,
+          Token:  this.ch_sample(yoken),
+          avg_purchase_value: parseFloat(curruntRecord[8].trim()),
+          Client_code: curruntRecord[1].trim(),
+          Client_name: curruntRecord[8].trim(),
+          Status: 'f',
+          Script: curruntRecord[3].trim(),
         };
         this.csvArr_try.push(csvc);
        
       }
+      
+    } else {
+        let curruntRecord = (<string>csvRecordsArray[i]).split(',');
+    
+       
+      // console.log(curruntRecord,"249")
+      // console.log(headerLength,"250")
+      // console.log(curruntRecord.length,"251")
+
+
+      if (curruntRecord.length == headerLength) {     
+       const yoken = curruntRecord[0].trim().replace(/\s+EQ$/, '');     
+        const csvc = {
+          Si:i,
+          Token:  this.ch_sample(yoken),
+          avg_purchase_value: parseFloat(curruntRecord[8].trim()),
+          Client_code: curruntRecord[1].trim(),
+          Client_name: curruntRecord[8].trim(),
+          Status: 'f',
+          Script: curruntRecord[3].trim(),
+        };
+        this.csvArr_try.push(csvc);
+       
+      }
+
     }
+    }
+    console.log(this.csvArr_try,"259");
     return this.csvArr_try;
   }
  
@@ -240,6 +311,7 @@ export class DashComponent implements OnInit {
       headerArray.push(headers[j]);
     }
     return headerArray;
+    console.log(headerArray);
   }
   fileReset() {
     this.csvReader.nativeElement.value = "";
@@ -273,8 +345,8 @@ export class DashComponent implements OnInit {
     this.monitoring=true;
     const iterate = () => {
       if (index < this.records.length) {
-        console.log(this.records[index].Pvalue);
-        const Pvalue = this.records[index].Pvalue;
+        console.log(this.records[index].avg_purchase_value);
+        const avg_purchase_value = this.records[index].avg_purchase_value;
         // this.records[index].score = Math.floor(Math.random() * 100);
         // console.log("Updated index " + index  );
         // Generate a random number between 700 and 900
@@ -287,18 +359,18 @@ export class DashComponent implements OnInit {
           console.log(res);
          this.randomValue = res.data.lp;
         
-          this.check_with(this.randomValue,Pvalue,index-1);
+          this.check_with(this.randomValue,avg_purchase_value,index-1);
  
         })
-        // this.check_with(250,Pvalue,index);
+        // this.check_with(250,avg_purchase_value,index);
        
         index++;
-        this.monitoringInterval = setTimeout(iterate, 10000);
+        this.monitoringInterval = setTimeout(iterate, 1000);
       } else {
         // Reset index to 0 and repeat the iteration
         console.log("Updated index " + index);
         index = 0;
-        this.monitoringInterval = setTimeout(iterate, 10000);
+        this.monitoringInterval = setTimeout(iterate, 1000);
       }
     };
  
@@ -311,13 +383,13 @@ export class DashComponent implements OnInit {
     console.log("Random value:", this.randomValue);
     // Calculate the difference percentage
     const difference = Math.abs(this.randomValue - purchase_value) / purchase_value * 100;
-    // Check if the difference is greater than or less than 10% of Pvalue
+    // Check if the difference is greater than or less than 10% of avg_purchase_value
     if (difference > 10) {
       if (this.randomValue > purchase_value) {
         const curruntRecord3 = {
           Si: this.records[index].Si,
-          Pvalue: this.records[index].Pvalue,
-          C_id: this.records[index].C_id,
+          avg_purchase_value: this.records[index].avg_purchase_value,
+          Client_code: this.records[index].Client_code,
           Status: this.records[index].Status,
           Script: this.records[index].Script,
           Time: new Date().toLocaleString(),
@@ -328,7 +400,7 @@ export class DashComponent implements OnInit {
         this.data1.push(curruntRecord3);
         this.cdr.markForCheck();
         const audio = new Audio('../assets/success.wav');
-        this.toastr.success(" Stock - "+this.records[index].Script+ " Triggered a (" + difference.toFixed(2) + "%) Higher value from the Purchase value For the client - "+this.records[index].C_id+ " ");
+        this.toastr.success(" Stock - "+this.records[index].Script+ " Triggered a (" + difference.toFixed(2) + "%) Higher value from the Purchase value For the client - "+this.records[index].Client_code+ " ");
         audio.play();
         this.dataSource = new MatTableDataSource(this.data1);
         console.log(this.dataSource,"=======================================");
@@ -339,8 +411,8 @@ export class DashComponent implements OnInit {
       } else {
         const curruntRecord3 = {
           Si: this.records[index].Si,
-          Pvalue: this.records[index].Pvalue,
-          C_id: this.records[index].C_id,
+          avg_purchase_value: this.records[index].avg_purchase_value,
+          Client_code: this.records[index].Client_code,
           Status: this.records[index].Status,
           Script: this.records[index].Script,
           Time: new Date().toLocaleString(),
@@ -352,7 +424,7 @@ export class DashComponent implements OnInit {
         this.cdr.markForCheck();
         const audio = new Audio('../assets/error.wav');
        
-        this.toastr.error(" Stock - "+this.records[index].Script+ " Triggered a (" + difference.toFixed(2) + "%) lower value from the Purchase value For the client - "+this.records[index].C_id+ " ");
+        this.toastr.error(" Stock - "+this.records[index].Script+ " Triggered a (" + difference.toFixed(2) + "%) lower value from the Purchase value For the client - "+this.records[index].Client_code+ " ");
         audio.play();
         this.dataSource = new MatTableDataSource(this.data1);
         console.log(this.dataSource,"=======================================");
@@ -394,7 +466,12 @@ export class DashComponent implements OnInit {
     window.URL.revokeObjectURL(url);
 }
 
+ch_sample(script_name: string){
 
+const token = this.stock_list.find(a => a.Symbol === script_name)
+return token ? token.Token : null;
+
+}
 
 
 }

@@ -4,6 +4,7 @@ import { ApiService } from '../service/api.service';
 import { HttpHeaders } from '@angular/common/http';
 import { NgxPermissionsService } from 'ngx-permissions';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-admin-login',
   templateUrl: './adminlogin.html',
@@ -16,7 +17,7 @@ export class Adminlogin implements OnInit {
   view : number = 0;
   fa2: string = '';
 
-  constructor(public api : ApiService, private fb: FormBuilder, private ps:NgxPermissionsService, private rs: Router) { }
+  constructor(public api : ApiService, private fb: FormBuilder, private ps:NgxPermissionsService, private rs: Router , public toaster:ToastrService) { }
 
   
 
@@ -61,6 +62,12 @@ export class Adminlogin implements OnInit {
         }
         this.api.login_shoonya(samp).subscribe((data) => {
           console.log(data)
+          if(data.data.stat=="Ok"){
+            this.toaster.success("Login success");
+          }
+          else{
+           this.toaster.error("login error");
+          }
         })
       }
     }

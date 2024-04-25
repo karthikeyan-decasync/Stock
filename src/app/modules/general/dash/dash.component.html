@@ -46,20 +46,25 @@
             <div class="font-small">{{ row.Si }}</div>
           </td>
           <td>
-            <span class="font-small">{{ row.Token }}</span>
+            <span class="font-small">{{ row.avg_purchase_value }}</span>
           </td>
           <td>
-            <span class="font-small">{{ row.Pvalue }}</span>
+            <span class="font-small">{{ row.Client_code }}</span>
           </td>
           <td>
-            <span class="font-small">{{ row.C_id }}</span>
-          </td>
-          <td>
-            <span class="font-small">{{ row.Status }}</span>
+            <span class="font-small">{{ row.Client_name }}</span>
           </td>
           <td>
             <span class="font-small">{{ row.Script }}</span>
           </td>
+          <!-- <td>
+            <span class="font-small">{{ row.Token }}</span>
+          </td>
+          <td>
+            <span class="font-small">{{ row.Status }}</span>
+          </td>
+ -->
+
           <!-- <td>
           <button class="btn btn-primary btn-sm" (click)="showModal()">
             Edit
@@ -67,7 +72,7 @@
         </td> -->
         </ng-template>
       </ngx-table>
-
+<!-- <button (click)="getJsonData()" >json</button> -->
       {{jsondatadisplay}}
     </div>
   </mat-tab>
@@ -97,15 +102,15 @@
           </ng-container>
     
     
-          <ng-container matColumnDef="C_id">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> C_id </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.C_id}} </mat-cell>
+          <ng-container matColumnDef="Client_code">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Client_code </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.Client_code}} </mat-cell>
           </ng-container>
     
     
-          <ng-container matColumnDef="Pvalue">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> Pvalue </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.Pvalue}} </mat-cell>
+          <ng-container matColumnDef="avg_purchase_value">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> avg_purchase_value </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.avg_purchase_value}} </mat-cell>
           </ng-container>
     
           <ng-containern matColumnDef="Status">
@@ -252,8 +257,8 @@
     <thead class="thead-dark" >
       <tr>
         <th scope="col">si</th>
-        <th scope="col">C_id</th>
-        <th scope="col">Pvalue</th>
+        <th scope="col">Client_code</th>
+        <th scope="col">avg_purchase_value</th>
         <th scope="col">Status</th>
         <th scope="col">Script</th>
         <th scope="col">current value</th>
@@ -263,8 +268,8 @@
     <tbody>
       <tr *ngFor="let record of data1;let i = index;">
         <th scope="row">{{record.Si}}</th>
-        <td>{{record.C_id}}</td>
-        <td>{{record.Pvalue}}</td>
+        <td>{{record.Client_code}}</td>
+        <td>{{record.avg_purchase_value}}</td>
         <td>{{record.Status}}</td>
         <td>{{record.Script}}</td>
         <td>{{record.Current_value}}</td>
@@ -301,14 +306,14 @@
     </ng-container>
 
 
-    <ng-container matColumnDef="C_id">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> C_id </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.C_id}} </mat-cell>
+    <ng-container matColumnDef="Client_code">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Client_code </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.Client_code}} </mat-cell>
     </ng-container>
 
 
-    <ng-container matColumnDef="Pvalue">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> Pvalue </mat-header-cell>
+    <ng-container matColumnDef="avg_purchase_value">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> avg_purchase_value </mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.Type}} </mat-cell>
     </ng-container>
 
