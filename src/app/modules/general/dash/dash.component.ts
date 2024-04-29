@@ -14,6 +14,10 @@ import { ToastrService } from 'ngx-toastr';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
+
+import * as Papa from 'papaparse';
+
+
 export interface Element {
 
   Client_code: number;
@@ -28,7 +32,8 @@ export interface Element {
 }
 
 const ELEMENT_DATA: Element[] = [
-  {Si:2,Client_code: 1, avg_purchase_value: 44,Status: 'H',Script:'SBIN',Type:'High',Current_value: 100, percentage: 0, Time:'10:00:00'},
+  {Si:2,Client_code: 1, avg_purchase_value: 44,Status: 'H',Script:'SBIN',Type:'High',Current_value: 100,
+   percentage: 0, Time:'10:00:00'},
 ];
 
 
@@ -93,6 +98,7 @@ export class DashComponent implements OnInit {
   displayedColumns = ['Si','Client_code', 'avg_purchase_value','Status','Script','Current_value','percentage','Time'];
   dataSource = new MatTableDataSource(null);
 
+  papa_ary : any [] =[];
 
   
 
@@ -212,16 +218,80 @@ export class DashComponent implements OnInit {
  
       reader.onload = () => {
         let csvData = reader.result;
-        let csvRecordsArray = (<string>csvData).split(/\r\n|\n/);
-        let headersRow = this.getHeaderArray(csvRecordsArray);
+
+       
+
+        const parsedData = Papa.parse(csvData, {
+          header: false
+        });
+        console.log('papa',parsedData);
+
+        this.papa_ary = parsedData.data;
+
+     
 
 
-    
-
-
-        this.records = this.getDataRecordsArrayFromCSVFile(csvRecordsArray, headersRow.length);
+     //   this.records = this.getDataRecordsArrayFromCSVFile(csvRecordsArray, headersRow.length);
         // console.log(this.records);
+           
+        for (let i = 1; i < parsedData.data.length; i++) 
+          {
+            const curruntRecord = this.papa_ary[i];    
+           
+               
+
+                if(curruntRecord[4] > 0)
+                  {
+                    const currunttoken = this.ch_sample(curruntRecord[3].trim().replace(/\s+EQ$/, ''));
+                    console.log(currunttoken,'currunt token'); 
+
+                    const csvc = {
+                      Si:i,
+                      Token: currunttoken,
+                      avg_purchase_value: parseFloat(curruntRecord[8].trim()),
+                      Client_code: curruntRecord[1].trim(),
+                      Client_name: curruntRecord[41].trim(),
+                      Status: 'f',
+                      Script: curruntRecord[3].trim(),
+                    };
+                    console.log(csvc,'csvc');
+                    this.csvArr_try.push(csvc);
+
+                  }
+         
+
+
+
+
+            // for (let j = i; j < curruntRecord.length; j++) 
+            //   {
+            //     const curruntRecordx = this.ch_sample(curruntRecord[3].trim().replace(/\s+EQ$/, ''));
+                
+              
+            //   }
+
+           //  const yoken = curruntRecord[0].trim().replace(/\s+EQ$/, '');     
+            // const csvc = {
+            //   Si:i,
+            //   Token:  this.ch_sample(yoken),
+            //   avg_purchase_value: parseFloat(curruntRecord[8].trim()),
+            //   Client_code: curruntRecord[1].trim(),
+            //   Client_name: curruntRecord[8].trim(),
+            //   Status: 'f',
+            //   Script: curruntRecord[3].trim(),
+            // };
+            // this.csvArr_try.push(csvc);
+            
+          }
+
+          this.records = this.csvArr_try;
+          console.log(this.records);
+
          this.data = this.records;
+
+
+
+
       };
  
       reader.onerror = function () {
@@ -233,43 +303,37 @@ export class DashComponent implements OnInit {
       this.fileReset();
     }
   }
+
+  preprocessHeaders(csvData: string): string {
+    const lines = csvData.split('\n');
+    if (lines.length > 0) {
+      const headers = lines[0].split(',');
+      const processedHeaders = headers.map(header => header.trim().replace(/\s+/g, '_'));
+      lines[0] = processedHeaders.join(',');
+    }
+    return lines.join('\n');
+  }
+
+
+
  
   
   getDataRecordsArrayFromCSVFile(csvRecordsArray: any, headerLength: any) {
 
-    console.log(csvRecordsArray,"240");
-    console.log(headerLength,"hl")
 
+   
 
     // for (let i = 1; i < csvRecordsArray.length; i++) 
-    for (let i = 1; i < 10; i++) 
+    for (let i = 1; i < 2; i++) 
     {
 
-console.log(csvRecordsArray[i],"248")
+console.log('csv array ..',csvRecordsArray[i])
 
 
    let currentRecordx = csvRecordsArray[i];
     let quotedData = currentRecordx.match(/"([^"]*)"/g);
-    if (quotedData) {
-        console.log("Quoted data found:", quotedData);
-         let curruntRecord = quotedData;
 
-          if (curruntRecord.length == headerLength) {     
-       const yoken = curruntRecord[0].trim().replace(/\s+EQ$/, '');     
-        const csvc = {
-          Si:i,
-          Token:  this.ch_sample(yoken),
-          avg_purchase_value: parseFloat(curruntRecord[8].trim()),
-          Client_code: curruntRecord[1].trim(),
-          Client_name: curruntRecord[8].trim(),
-          Status: 'f',
-          Script: curruntRecord[3].trim(),
-        };
-        this.csvArr_try.push(csvc);
-       
-      }
-      
-    } else {
+   
         let curruntRecord = (<string>csvRecordsArray[i]).split(',');
     
        
@@ -293,7 +357,7 @@ console.log(csvRecordsArray[i],"248")
        
       }
 
-    }
+    
     }
     console.log(this.csvArr_try,"259");
     return this.csvArr_try;
@@ -304,15 +368,7 @@ console.log(csvRecordsArray[i],"248")
   isValidCSVFile(file: any) {
     return file.name.endsWith(".csv");
   }
-  getHeaderArray(csvRecordsArr: any) {
-    let headers = (<string>csvRecordsArr[0]).split(',');
-    let headerArray = [];
-    for (let j = 0; j < headers.length; j++) {
-      headerArray.push(headers[j]);
-    }
-    return headerArray;
-    console.log(headerArray);
-  }
+
   fileReset() {
     this.csvReader.nativeElement.value = "";
     this.records = [];
@@ -347,9 +403,7 @@ console.log(csvRecordsArray[i],"248")
       if (index < this.records.length) {
         console.log(this.records[index].avg_purchase_value);
         const avg_purchase_value = this.records[index].avg_purchase_value;
-        // this.records[index].score = Math.floor(Math.random() * 100);
-        // console.log("Updated index " + index  );
-        // Generate a random number between 700 and 900
+      
         // this.randomValue = Math.floor(Math.random() * (900 - 700 + 1)) + 700;
         const sample = {
           "exch_name": "NSE",
@@ -362,7 +416,7 @@ console.log(csvRecordsArray[i],"248")
           this.check_with(this.randomValue,avg_purchase_value,index-1);
  
         })
-        // this.check_with(250,avg_purchase_value,index);
+        
        
         index++;
         this.monitoringInterval = setTimeout(iterate, 1000);
@@ -467,11 +521,12 @@ console.log(csvRecordsArray[i],"248")
 }
 
 ch_sample(script_name: string){
-
 const token = this.stock_list.find(a => a.Symbol === script_name)
 return token ? token.Token : null;
-
 }
 
 
+
+
 }
+
