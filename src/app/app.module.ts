@@ -4,6 +4,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { NgxPermissionsModule } from 'ngx-permissions';
 import { AutocompleteLibModule } from 'angular-ng-autocomplete';
 
+import { navbarComponent } from './modules/general/navbar/navbar';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './modules/general/home/home.component';
 import { NotFoundComponent } from './modules/general/not-found/not-found.component';
@@ -90,7 +91,8 @@ import { LoaderComponent } from './modules/general/loader/main';
     DashComponent,
     ReportMainComponent,
     LoaderComponent,
-    NavLinkComponent
+    NavLinkComponent,
+    navbarComponent
   ],
   imports: [
     BrowserModule,

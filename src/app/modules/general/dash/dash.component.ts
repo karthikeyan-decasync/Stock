@@ -82,7 +82,7 @@ interface  Stock_list {
 }
 
 
-@Component({
+ @Component({
   selector: 'app-dash',
   templateUrl: './dash.component.html',
   styleUrls: ['./dash.component.css'],
@@ -162,7 +162,7 @@ export class DashComponent implements OnInit {
       Client_name: '',
       Status: '',
       Script: ''
-    };
+        };
     
     // Assign the data to the data source for the table to render
 
@@ -192,15 +192,10 @@ export class DashComponent implements OnInit {
           ' It applies Routing, Lazy loading, Server side rendering and Progressive Web App (PWA)'
       });
  
-      
-
-
       this.api.getData_stock_list().subscribe(data =>{
         
       this.stock_list = data;
 
-    
-        
       })
  
   }
@@ -219,27 +214,18 @@ export class DashComponent implements OnInit {
       reader.onload = () => {
         let csvData = reader.result;
 
-       
-
+      
         const parsedData = Papa.parse(csvData, {
           header: false
         });
         console.log('papa',parsedData);
 
         this.papa_ary = parsedData.data;
-
-     
-
-
-     //   this.records = this.getDataRecordsArrayFromCSVFile(csvRecordsArray, headersRow.length);
-        // console.log(this.records);
+   
            
         for (let i = 1; i < parsedData.data.length; i++) 
           {
             const curruntRecord = this.papa_ary[i];    
-           
-               
-
                 if(curruntRecord[4] > 0)
                   {
                     const currunttoken = this.ch_sample(curruntRecord[3].trim().replace(/\s+EQ$/, ''));
@@ -258,39 +244,12 @@ export class DashComponent implements OnInit {
                     this.csvArr_try.push(csvc);
 
                   }
-         
-
-
-
-
-            // for (let j = i; j < curruntRecord.length; j++) 
-            //   {
-            //     const curruntRecordx = this.ch_sample(curruntRecord[3].trim().replace(/\s+EQ$/, ''));
-                
-              
-            //   }
-
-           //  const yoken = curruntRecord[0].trim().replace(/\s+EQ$/, '');     
-            // const csvc = {
-            //   Si:i,
-            //   Token:  this.ch_sample(yoken),
-            //   avg_purchase_value: parseFloat(curruntRecord[8].trim()),
-            //   Client_code: curruntRecord[1].trim(),
-            //   Client_name: curruntRecord[8].trim(),
-            //   Status: 'f',
-            //   Script: curruntRecord[3].trim(),
-            // };
-            // this.csvArr_try.push(csvc);
-            
           }
 
           this.records = this.csvArr_try;
           console.log(this.records);
 
          this.data = this.records;
-
-
-
 
       };
  
@@ -314,22 +273,15 @@ export class DashComponent implements OnInit {
     return lines.join('\n');
   }
 
-
-
- 
   
   getDataRecordsArrayFromCSVFile(csvRecordsArray: any, headerLength: any) {
 
-
-   
 
     // for (let i = 1; i < csvRecordsArray.length; i++) 
     for (let i = 1; i < 2; i++) 
     {
 
 console.log('csv array ..',csvRecordsArray[i])
-
-
    let currentRecordx = csvRecordsArray[i];
     let quotedData = currentRecordx.match(/"([^"]*)"/g);
 
@@ -374,6 +326,7 @@ console.log('csv array ..',csvRecordsArray[i])
     this.records = [];
     this.csvArr_try = [];
     this.jsondatadisplay = '';
+    
   }
   getJsonData() {
     this.jsondatadisplay = JSON.stringify(this.records);

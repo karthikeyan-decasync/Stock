@@ -13,9 +13,9 @@ export class LoginComponent implements OnInit {
   push_disabled_enter : number = 0;
   submitted :boolean = false;
   loginForm : FormGroup;
+  registerForm : FormGroup;
+  registerclick : boolean = false
   constructor(public api : ApiService, private fb: FormBuilder, private ps:NgxPermissionsService, private rs: Router) { }
-
-  
 
   ngOnInit(): void {
    

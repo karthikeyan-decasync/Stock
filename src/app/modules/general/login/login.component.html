@@ -1,10 +1,10 @@
-<div class="container py-5">
+<div class="container py-5" *ngIf="!registerclick">
 	<div class="row"> 
 	<div class="col-md-6 col-12"> 
-		<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnkrDEEyxc09trf_eIjLaAGpL37qBp7IceQjh84zqiHw&s" alt="Girl in a jacket" width="300" height="280">	
+		<img src="https://freepngimg.com/save/25739-stock-market-transparent-image/550x412" alt="Girl in a jacket" width="400" height="380">	
 	</div>
-	<div style="background-color: #b7b5b159;" class="col-md-5 col-12  mt-5 p-5 pt-5 ">
-		<h1 class="ml-5"> LOGIN </h1>
+	<div style="background-color: #b7b5b159;" class="col-md-5 col-12 mt-5 p-5 pt-5">
+		<h1 class="ml-5"> LOGIN </h1> 
 		<form [formGroup]="loginForm"  >
 		  <div class="form-floating mb-3">
 			<input formControlName="agency_code" type="text" class="form-control rounded-4"  placeholder="Agency code">
@@ -28,7 +28,57 @@
 		  type="button"><span class="glyphicon glyphicon-ok"></span>  User Offline </button>
 
 
-		  <small class="text-muted">By clicking Login, you agree to the terms of use.</small>
+		  <!-- <small class="text-muted">By clicking Login, you agree to the terms of use.</small> -->
+		  <br>
+		  <small>Youhave no account? &nbsp; <a class="text-primary fw-bold" (click)="registerclick = !registerclick" style="cursor: pointer;" >Register</a></small>
+	
+		  <hr class="my-4">
+		 
+		</form>
+	  </div>
+	</div>
+</div>
+
+<!-- register -->
+
+<div class="container py-5" *ngIf="registerclick">
+	<div class="row"> 
+	<div class="col-md-6 col-12"> 
+		<img src="https://freepngimg.com/save/25739-stock-market-transparent-image/550x412" alt="Girl in a jacket" width="400" height="380">	
+	</div>
+	<div style="background-color: #b7b5b159;" class="col-md-5 col-12  mt-5 p-5 pt-5 ">
+		<h1 class="ml-5"> REGISTER </h1>
+		<form [formGroup]="registerForm"  >
+			<div class="form-floating mb-3">
+				<input formControlName="agency_name" type="text" class="form-control rounded-4"  placeholder="Agency name">
+				<label>Agency Name</label>
+			  </div>
+		  <div class="form-floating mb-3">
+			<input formControlName="agency_code" type="text" class="form-control rounded-4"  placeholder="Agency code">
+			<label>Agency Code</label>
+		  </div>
+		  <div class="form-floating mb-3">
+			<input formControlName="passwd" type="password" class="form-control rounded-4" placeholder="Password">
+			<label>Password</label>
+		  </div>
+		  <button  *ngIf="push_disabled_enter == 1" [disabled]="!this.registerForm.valid" class="w-100 mb-2 btn btn-lg rounded-4 btn-primary"
+		   (click)="onForm(registerForm.value)">  Log in </button>
+		  
+		  <button  *ngIf="push_disabled_enter == 2" class="btn-block btn pull-right">
+			<i class="fa fa-spinner fa-spin"></i> Logging...
+		  </button>
+
+		  <button [disabled]="true" *ngIf="push_disabled_enter == 3" class="btn btn-block btn-warning pull-right" 
+		  type="button"><span class="glyphicon glyphicon-ok"></span>  Invalid User </button>
+
+		  <button [disabled]="true" *ngIf="push_disabled_enter == 4" class="btn btn-block btn-warning pull-right" 
+		  type="button"><span class="glyphicon glyphicon-ok"></span>  User Offline </button>
+
+
+		  <!-- <small class="text-muted">By clicking Login, you agree to the terms of use.</small> -->
+		  <br>
+		  <small>Alredy have an account? &nbsp; <a (click)="registerclick = !registerclick" class="text-primary fw-bold" style="cursor: pointer;" >Login</a></small>
+	
 		  <hr class="my-4">
 		 
 		</form>

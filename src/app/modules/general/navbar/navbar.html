@@ -1,9 +1,9 @@
 <header class="navbar navbar-expand-md navbar-dark fixed-top nga-navbar">
     <nav class="container" aria-label="Main navigation">
       <a routerLink="/" class="navbar-brand" alt="Accueil" aria-label="Ganatan">
-        <img src="https://seeklogo.com/images/A/akshaya-logo-95BB241499-seeklogo.com.png" width="25" height="25"
+        <img src="https://static.vecteezy.com/system/resources/thumbnails/017/744/376/small_2x/stock-exchange-market-with-chart-png.png" width="25" height="25"
           alt="Logo Ganatan">
-        <span class="nga-logo mx-1"> Akshaya </span>
+        <span class="nga-logo mx-1"> Stock </span>
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
         aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -11,12 +11,12 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <!-- -->
-        <ul *ngIf="!this.api.logged_in" class="navbar-nav mx-auto">
+        <!-- <ul *ngIf="!this.api.logged_in" class="navbar-nav mx-auto">
           <li class="nav-item">
             <a class="nav-link" aria-current="page" routerLink="/home">
               <i class="fas fa-home me-1"></i>Home</a>
           </li>
-        </ul>
+        </ul> -->
         <!-- *ngIf="this.api.logged_in" -->
         <ul class="navbar-nav me-auto">
           <!-- Dash -- *ngxPermissionsOnly="['Admin','Staff','Member']" -->
@@ -82,12 +82,17 @@
   
   
         <form class="d-flex">
+
+          <div>
+            <h4 class="text-white mx-auto  me-2 mt-2">Welcome&nbsp;<span class="text-white fw-bold">Agency <i class="fa-solid fa-user"></i></span></h4>
+          </div>
+
           <!-- <button *ngxPermissionsOnly="['Admin']" type="button" class="btn btn-sm btn-primary me-2" routerLink="/signup"><i
               class="fas fa-user-plus me-2"></i>Add User</button> -->
   
-  
+<!--   
           <button *ngIf="!this.api.logged_in" type="button" class="btn btn-sm btn-outline-light me-2"
-            routerLink="/login">Login</button>
+            routerLink="/login">Login</button> -->
   
           <button *ngIf="this.api.logged_in" type="button" class="btn btn-sm btn-outline-light me-2" ><i
               class="fa fa-sign-out me-2"></i>Logout</button>
